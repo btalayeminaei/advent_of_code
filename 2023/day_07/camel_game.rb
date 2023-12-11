@@ -30,7 +30,7 @@ class CamelCard
     when "T"
       10 
     when "J"
-      11 
+      0
     when "Q"
       12 
     when "K"
@@ -46,10 +46,12 @@ end
 class CamelHand
   include Comparable
 
-  def initialize(cards, bid)
-    @raw = cards
+  def initialize(cards, bid, original)
+    @original = original
     @cards = []
     cards.each_char { |c|  @cards << CamelCard.new(c) }
+    @original = []
+    original.each_char { |c|  @original << CamelCard.new(c) }
     @bid = bid.to_i
   end
 
@@ -61,7 +63,7 @@ class CamelHand
     res = value <=> other.value
     if res == 0
       (0...5).each do |i|
-        x = cards[i] <=> other.cards[i]
+        x = original[i] <=> other.original[i]
         if x != 0
           res = x
           break
@@ -73,6 +75,10 @@ class CamelHand
 
   def cards
     @cards
+  end
+
+  def original
+    @original
   end
 
   def value
@@ -100,7 +106,14 @@ class CamelGame
   def initialize(input)
     @hands = input.map do |i|
       cards, bid = i.split(" ")
-      CamelHand.new(cards, bid)
+      strongest = CamelHand.new(cards, bid, cards)
+      ['2', '3', '4', '5', '6', '7', '8', '9', 'T', 'Q', 'K', 'A'].each do |c|
+        hand = CamelHand.new(cards.gsub('J', c), bid, cards)
+        if hand > strongest
+          strongest = hand
+        end
+      end
+      strongest
     end
   end
 

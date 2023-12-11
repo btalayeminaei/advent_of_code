@@ -31,7 +31,7 @@ class TestCamelGame < Test::Unit::TestCase
       '2JJJJ 53',
       'JJJJ2 41',
     ])
-    assert_equal 6440, camel_game_1.total_winnings
-    assert_equal 6592, camel_game_2.total_winnings
+    assert_equal 5905, camel_game_1.total_winnings
+    assert_equal 6839, camel_game_2.total_winnings
   end
 end
